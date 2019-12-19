@@ -119,8 +119,9 @@ class GeneticAlgorithm():
             _,next_step = curr_player.alpha_beta(Opponent,4,-1*float('inf'),float('inf'))
             #print(next_step)
             if next_step is None:
-                if game.getGameEnded(board,curr_color):
-                    break
+                break
+                #if game.getGameEnded(board.pieces,curr_color):
+                #    break
             else:
                 board.execute_move(move=next_step, color=1)
                 #display(np.copy(board.pieces))
