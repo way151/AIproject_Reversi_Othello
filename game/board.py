@@ -15,13 +15,14 @@ class Board():
         # Set up the initial 4 pieces.
         self.pieces[int(self.n/2)-1][int(self.n/2)] = 1
         self.pieces[int(self.n/2)][int(self.n/2)-1] = 1
-        self.pieces[int(self.n/2)-1][int(self.n/2)-1] = -1;
-        self.pieces[int(self.n/2)][int(self.n/2)] = -1;
+        self.pieces[int(self.n/2)-1][int(self.n/2)-1] = -1
+        self.pieces[int(self.n/2)][int(self.n/2)] = -1
 
     # add [][] indexer syntax to the Board
     def __getitem__(self, index):
         return self.pieces[index]
-
+    def get_size(self):
+        return self.n
     def countDiff(self, color):
         count = 0
         for y in range(self.n):
@@ -31,7 +32,17 @@ class Board():
                 if self[x][y]==-color:
                     count -= 1
         return count
-
+    def countAll(self,color):
+        curr,oppo,emp = 0,0,0
+        for y in range(self.n):
+            for x in range(self.n):
+                if self[x][y]==color:
+                    curr += 1
+                elif self[x][y]==-color:
+                    oppo += 1
+                else:
+                    emp +=1
+        return curr,oppo,emp
     def get_legal_moves(self, color):
         """Returns all the legal moves for the given color.
         (1 for white, -1 for black
@@ -44,6 +55,21 @@ class Board():
                 if self[x][y]==color:
                     newmoves = self.get_moves_for_square((x,y))
                     moves.update(newmoves)
+        return list(moves)
+
+    def get_legal_moves2(self, color):
+        """Returns all the legal moves for the given color.
+        (1 for white, -1 for black
+        """
+        moves = set()  # stores the legal moves.
+
+        # Get all the squares with pieces of the given color.
+        for y in range(self.n):
+            for x in range(self.n):
+                if self.pieces != []:
+                    if self.pieces[x][y]==color:
+                        newmoves = self.get_moves_for_square((x,y))
+                        moves.update(newmoves)
         return list(moves)
 
     def has_legal_moves(self, color):
@@ -169,7 +195,8 @@ class OthelloGame():
         valids = [0]*self.getActionSize()
         b = Board(self.n)
         b.pieces = np.copy(board)
-        legalMoves =  b.get_legal_moves(player)
+        #print(player)
+        legalMoves =  b.get_legal_moves2(player)
         if len(legalMoves)==0:
             valids[-1]=1
             return np.array(valids)

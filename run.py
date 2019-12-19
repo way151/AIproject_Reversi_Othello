@@ -6,7 +6,9 @@ from game.board import OthelloGame
 from game.players import HumanOthelloPlayer
 # from players.MCTSPlayer import MCTSPlayer
 from game.players import NNetPlayer
+from game.players import GAPlayer
 from PytorchNNet import NNetWrapper
+
 
 from config import Config
 
@@ -16,7 +18,7 @@ if __name__ == '__main__':
     config = Config()
 
     # rp = RandomPlayer(game).play
-    hp = HumanOthelloPlayer(game).play
+    hp = GAPlayer(game).play
     # mctsp = MCTSPlayer(game, config).play
 
     nn = NNetWrapper(game, config)
@@ -25,12 +27,12 @@ if __name__ == '__main__':
     nn.load_checkpoint(ckpt[0], ckpt[1])
     nnp = NNetPlayer(game, nn, config).play
 
-    nn2 = NNetWrapper(game, config)
-    ckpt2 = ('saved','checkpoint_8.pth.tar')
-    nn2.load_checkpoint(ckpt2[0], ckpt2[1])
-    nnp2 = NNetPlayer(game, nn2, config).play
+    #nn2 = NNetWrapper(game, config)
+    #ckpt2 = ('saved','checkpoint_8.pth.tar')
+    #nn2.load_checkpoint(ckpt2[0], ckpt2[1])
+    #nnp2 = NNetPlayer(game, nn2, config).play
 
 
-    arena = Arena(nnp2, nnp, game, display=display)
+    arena = Arena(hp, nnp, game, display=display)
     out = arena.playGames(50, verbose=True)
     print(out)

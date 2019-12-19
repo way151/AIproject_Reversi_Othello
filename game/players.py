@@ -1,5 +1,7 @@
 import numpy as np
-from model.mcts import MCTS 
+from model.mcts import MCTS
+from model.geneticAlgorithm import GAAI
+from game.board import Board
 class HumanOthelloPlayer():
     def __init__(self, game):
         self.game = game
@@ -127,3 +129,31 @@ class MCTSPlayer():
 
     def play(self, x, temp=0):
         return np.argmax(self.mcts.getActionProb(x, temp=temp))
+
+class GAPlayer():
+    def __init__(self,game):
+        #GAAI(self,game,board,ele_weights,player_num=1):
+
+        self.game = game
+
+    def play(self,board):
+        ele_weights = []
+        with open('./model/best_gene.txt','r') as f:
+            line = f.read()
+            ele_weights_str = line.split()
+            for x in ele_weights_str:
+                ele_weights.append(int(x))
+        b = Board()
+        for i in range(b.get_size()):
+            for j in range(b.get_size()):
+                b.pieces[i][j] = board[i][j]
+        self.ga = GAAI(self.game, b, ele_weights)
+        Opponent = GAAI(self.game, b, ele_weights)
+        _, next_step = self.ga.alpha_beta(Opponent, 4, -1 * float('inf'), float('inf'))
+        #print(board)
+        if next_step is None:
+            return 64
+        else:
+            (i, j) = next_step
+            #print(next_step)
+            return i*8+j

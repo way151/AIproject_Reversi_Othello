@@ -62,7 +62,6 @@ class Arena():
             print("Game over: Turn ", str(it), "Result ", str(self.game.getGameEnded(board, 1)))
             self.display(board)
         return self.game.getGameEnded(board, 1)
-
     def playGames(self, num, verbose=False):
         """
         Plays num games in which player1 starts num/2 games and player2 starts
@@ -161,6 +160,7 @@ class ArenaMP(Arena):
             print("Game over: Turn ", str(it), "Result ", str(game.getGameEnded(board, 1)))
             display(board)
         return game.getGameEnded(board, 1)
+
 
     def playGames(self, num, verbose=False, num_workers=mp.cpu_count()):
         """
