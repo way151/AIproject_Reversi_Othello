@@ -1,4 +1,4 @@
-MUTATION_RATE = 0.2
+MUTATION_RATE = 0.5
 from game.board import  OthelloGame
 from game.board import  Board
 from game.board import display
@@ -95,7 +95,7 @@ class GeneticAlgorithm():
                 new_popul.append(individual2)
             self.popul = new_popul
             print('current optimal train weight: ',self.popul[max_fit_index])
-            with open('best_gene.txt','ws') as f:
+            with open('best_gene.txt','w') as f:
                 for x in self.popul[max_fit_index]:
                     print(x)
                     f.write(str(x))

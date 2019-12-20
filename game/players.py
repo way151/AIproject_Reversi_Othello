@@ -142,7 +142,7 @@ class GAPlayer():
             line = f.read()
             ele_weights_str = line.split()
             for x in ele_weights_str:
-                ele_weights.append(int(x))
+                ele_weights.append(float(x))
         b = Board()
         for i in range(b.get_size()):
             for j in range(b.get_size()):
