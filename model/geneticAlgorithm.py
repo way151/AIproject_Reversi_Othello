@@ -349,7 +349,7 @@ class GAAI():
         return best_score,best_action_Next
 
 if __name__ == '__main__':
-    iter_size = 5
+    iter_size = 20
     population_size = 5
     individuals_size = 6
     ga = GeneticAlgorithm(population_size, individuals_size, iter_size)
