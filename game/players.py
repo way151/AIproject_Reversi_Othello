@@ -1,5 +1,7 @@
 import numpy as np
-from model.mcts import MCTS 
+from model.mcts import MCTS
+from model.geneticAlgorithm import GAAI
+from game.board import Board
 class HumanOthelloPlayer():
     def __init__(self, game):
         self.game = game
@@ -12,13 +14,23 @@ class HumanOthelloPlayer():
                 print(int(i/self.game.n), int(i%self.game.n))
         while True:
             a = input()
+            a = a.split()
+            if len(a) == 2:
 
-            x,y = [int(x) for x in a.split(' ')]
-            a = self.game.n * x + y if x!= -1 else self.game.n ** 2
-            if valid[a]:
-                break
-            else:
-                print('Invalid')
+                x,y = [x for x in a]
+                if x < '0' or x > '9':
+                    continue
+                if y < '0' or y > '9':
+                    continue
+                x = int(x)
+                y = int(y)
+                if x*8+y >= 64:
+                    continue
+                a = self.game.n * x + y if x!= -1 else self.game.n ** 2
+                if valid[a]:
+                    break
+                else:
+                    print('Invalid')
 
         return a
 
@@ -83,8 +95,9 @@ class NNetPlayer():
         self.mcts = MCTS(game, nnet, args)
 
     def play(self, x, temp=0):
-        return np.argmax(self.mcts.getActionProb(x, temp=temp))
-
+        res = np.argmax(self.mcts.getActionProb(x, temp=temp))
+        print((res//8, res %8))
+        return res
 
 class DummyNNet():
         """
@@ -127,3 +140,31 @@ class MCTSPlayer():
 
     def play(self, x, temp=0):
         return np.argmax(self.mcts.getActionProb(x, temp=temp))
+
+class GAPlayer():
+    def __init__(self,game):
+        #GAAI(self,game,board,ele_weights,player_num=1):
+
+        self.game = game
+
+    def play(self,board):
+        ele_weights = []
+        with open('./model/best_gene1.txt','r') as f:
+            line = f.read()
+            ele_weights_str = line.split()
+            for x in ele_weights_str:
+                ele_weights.append(float(x))
+        b = Board()
+        for i in range(b.get_size()):
+            for j in range(b.get_size()):
+                b.pieces[i][j] = board[i][j]
+        self.ga = GAAI(self.game, b, ele_weights)
+        Opponent = GAAI(self.game, b, ele_weights)
+        _, next_step = self.ga.alpha_beta(Opponent, 4, -1 * float('inf'), float('inf'))
+        #print(board)
+        if next_step is None:
+            return 64
+        else:
+            (i, j) = next_step
+            #print(next_step)
+            return i*8+j
